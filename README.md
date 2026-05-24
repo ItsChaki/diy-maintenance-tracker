@@ -1,2 +1,15 @@
 # diy-maintenance-tracker
 A project made based on my needs of servicing my personal vehicle and keeping track of service history. I'm a diyer who loves working on their personal vehicle as a hobby and out of necessity to save money. Doing so I have had a hard time keeping track of costs and service history. I want to work on my partner's vehicle and parents' vehicles. However, documentation for warranty purposes is a concern of mine. This is a problem I need to solve and cars are a passion of mine. 
+
+
+#Features
+-track vehicle service history
+-keep track of service details
+-upload supporting documents
+-get reminders when services will be do soon
+
+#TODO: Tech Stack
+
+#TODO: Setup instructions
+
+#TODO: roadmap
