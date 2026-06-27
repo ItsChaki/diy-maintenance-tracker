@@ -45,6 +45,15 @@ def test_add_vehicle(test_db):
     assert vehicle[3] == "Toyota"               #make
     assert vehicle[7] == "Daily Driver"         #nickname
 
+
+def test_get_vehicle_not_found(test_db):
+    """
+    testing to see we get a result of None
+    """
+    result = get_vehicle(999)
+    assert result == None
+
+
 def test_duplicate_vin_raises(test_db):
     """The UNIQUE constraint on VIN should prevent duplicate inserts."""
     add_vehicle("1HGBH41JXMN109186", 2020, "Toyota", "Corolla")
