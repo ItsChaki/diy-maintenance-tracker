@@ -2,7 +2,7 @@
 import sqlite3
 import pytest
 import database
-from vehicles import add_vehicle, get_vehicle
+from vehicles import add_vehicle, get_vehicle, list_vehicles
 
 @pytest.fixture
 def test_db(tmp_path):
@@ -52,6 +52,15 @@ def test_get_vehicle_not_found(test_db):
     """
     result = get_vehicle(999)
     assert result == None
+
+
+def test_list_vehicles(test_db):
+    """
+    Adds vehicles to the database, make sure lengths match
+    """
+    testList = list_vehicles()
+    assert testList[0] == "chaki"
+
 
 
 def test_duplicate_vin_raises(test_db):
