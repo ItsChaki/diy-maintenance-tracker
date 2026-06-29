@@ -51,7 +51,7 @@ def test_get_vehicle_not_found(test_db):
     testing to see we get a result of None
     """
     result = get_vehicle(999)
-    assert result == None
+    assert result is None
 
 
 def test_list_vehicles(test_db):
@@ -117,7 +117,7 @@ def test_delete_vehicle(test_db):
     )
     delete_vehicle(new_id)
     test = get_vehicle(new_id)
-    assert test == None
+    assert test is None
 
 
 def test_duplicate_vin_raises(test_db):
