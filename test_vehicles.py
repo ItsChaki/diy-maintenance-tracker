@@ -2,7 +2,7 @@
 import sqlite3
 import pytest
 import database
-from vehicles import add_vehicle, get_vehicle, list_vehicles, update_vehicle_nickname
+from vehicles import add_vehicle, get_vehicle, list_vehicles, update_vehicle_nickname, delete_vehicle
 
 @pytest.fixture
 def test_db(tmp_path):
@@ -103,6 +103,21 @@ def test_update_vehicle_name(test_db):
     test = get_vehicle(new_id)
     assert test[7] == "Chaki's Car"
 
+
+def test_delete_vehicle(test_db):
+    """
+    Add and delete a vehicle. Verify it has been deleted
+    """
+    new_id = add_vehicle(
+        vin="1HGBH41JXMN155387",
+        year=2013,
+        make="Nissan",
+        model="Altima",
+        nickname="Helltima",
+    )
+    delete_vehicle(new_id)
+    test = get_vehicle(new_id)
+    assert test == None
 
 
 def test_duplicate_vin_raises(test_db):
