@@ -12,3 +12,8 @@ def log_service_with_items(vehicle_id: int,
 ) -> int:
     """
     """
+
+def add_service_record(vehicle_id, service_date, mileage, is_diy, 
+                       service_center=None, total_cost=None, notes=None)
+    """
+    """
