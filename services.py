@@ -22,19 +22,19 @@ def log_service_with_items(vehicle_id: int,
     conn = get_connection()
     try:
         cursor = conn.cursor()
-        # 1. Insert the ServiceRecord (parent)
+        #Insert the ServiceRecord (parent)
         cursor.execute("INSERT INTO ServiceRecord (...) VALUES (...)", (...))
         new_service_id = cursor.lastrowid
 
-        # 2. Insert each line item, referencing the parent
+        #Insert each line item, referencing the parent
         for item in items:
             cursor.execute("INSERT INTO ServiceLineItem (...) VALUES (...)", (...))
 
-        conn.commit()  # ONLY commits if everything above succeeded
+        conn.commit()  #ONLY commits if everything above succeeded
         return new_service_id
 
     except sqlite3.Error:
-        conn.rollback()  # undo everything if anything fails
+        conn.rollback()  #undo everything if anything fails
         raise
     finally:
         conn.close()
@@ -42,7 +42,26 @@ def log_service_with_items(vehicle_id: int,
 def add_service_record(vehicle_id, service_date, mileage, is_diy, 
                        service_center=None, total_cost=None, notes=None):
     """
+    This function adds the service record to a existing vehicle. Service details are required
     """
+    conn = get_connection()
+
+
 def get_service_record(record_id):
     """
+    pulls the service record of a given vehicle
     """
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        SELECT * FROM Vehicle WHERE id = ?
+        """,
+        (vehicle_id,)
+    )
+    
+    vehicle = cursor.fetchone()
+    conn.close()
+
+    return vehicle
+    
