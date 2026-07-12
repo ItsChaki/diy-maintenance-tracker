@@ -42,9 +42,17 @@ def log_service_with_items(vehicle_id: int,
 def add_service_record(vehicle_id, service_date, mileage, is_diy, 
                        service_center=None, total_cost=None, notes=None):
     """
-    This function adds the service record to a existing vehicle. Service details are required
+    This function adds the service record to a existing vehicle. Service details are required.
     """
     conn = get_connection()
+    cursor = conn.connect()
+    cursor.execute(
+        """
+        INSERT INTO ServiceRecord (vehicleId, serviceDate, mileage, isDiy, serviceCenter, totalCost, notes)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """
+    )
+    conn.close()
 
 
 def get_service_record(record_id):
@@ -57,11 +65,14 @@ def get_service_record(record_id):
         """
         SELECT * FROM Vehicle WHERE id = ?
         """,
-        (vehicle_id,)
+        (record_id,)
     )
     
-    vehicle = cursor.fetchone()
+    serviceRecord = cursor.fetchone()
     conn.close()
 
-    return vehicle
-    
+    return serviceRecord
+
+def list_services_for_vehicle(vehicle_id):
+    """
+    """
