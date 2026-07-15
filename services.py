@@ -75,4 +75,34 @@ def get_service_record(record_id):
 
 def list_services_for_vehicle(vehicle_id):
     """
+    fetches all services for a vehicle, newest first. WHERE vehicleId gets just the given records for a vehicle
     """
+    #establish connection
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        SELECT * FROM ServiceRecord
+        WHERE vehicleId = ?
+        ORDER BY serviceDate DESC   
+        """
+    )
+    services = cursor.fetchall()
+    conn.close()
+
+    return services
+
+def delete_service_record(record_id):
+    """
+    Given record_id, service record is deleted. CASCADE takes care of service line items
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    #deletes service record, CASCADE takes care of service line items
+    cursor.execute(
+        """
+        DELETE FROM ServiceRecord WHERE id = ?  
+        """
+    )
+    conn.commit()
+    conn.close()
