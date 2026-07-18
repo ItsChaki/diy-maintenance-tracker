@@ -23,12 +23,21 @@ def log_service_with_items(vehicle_id: int,
     try:
         cursor = conn.cursor()
         #Insert the ServiceRecord (parent)
-        cursor.execute("INSERT INTO ServiceRecord (...) VALUES (...)", (...))
+        cursor.execute("" \
+            """
+            INSERT INTO ServiceRecord (...) VALUES (...)
+            """, 
+            (...)
+        )
         new_service_id = cursor.lastrowid
 
         #Insert each line item, referencing the parent
         for item in items:
-            cursor.execute("INSERT INTO ServiceLineItem (...) VALUES (...)", (...))
+            cursor.execute(
+                """INSERT INTO ServiceLineItem (...) VALUES (...)
+                """
+                ,()
+            )
 
         conn.commit()  #ONLY commits if everything above succeeded
         return new_service_id
@@ -40,19 +49,23 @@ def log_service_with_items(vehicle_id: int,
         conn.close()
 
 def add_service_record(vehicle_id, service_date, mileage, is_diy, 
-                       service_center=None, total_cost=None, notes=None):
+                       service_center=None, total_cost=None, notes=None) -> int:
     """
     This function adds the service record to a existing vehicle. Service details are required.
     """
     conn = get_connection()
-    cursor = conn.connect()
+    cursor = conn.cursor()
     cursor.execute(
         """
         INSERT INTO ServiceRecord (vehicleId, serviceDate, mileage, isDiy, serviceCenter, totalCost, notes)
         VALUES (?, ?, ?, ?, ?, ?, ?)
-        """
+        """ ,
+        (vehicle_id, service_date, mileage, is_diy, service_center, total_cost, notes,),
     )
+    serviceID = cursor.lastrowid
+    conn.commit()
     conn.close()
+    return serviceID
 
 
 def get_service_record(record_id):
@@ -63,7 +76,7 @@ def get_service_record(record_id):
     cursor = conn.cursor()
     cursor.execute(
         """
-        SELECT * FROM Vehicle WHERE id = ?
+        SELECT * FROM ServiceRecord WHERE id = ?
         """,
         (record_id,)
     )
@@ -85,7 +98,8 @@ def list_services_for_vehicle(vehicle_id):
         SELECT * FROM ServiceRecord
         WHERE vehicleId = ?
         ORDER BY serviceDate DESC   
-        """
+        """,
+        (vehicle_id),
     )
     services = cursor.fetchall()
     conn.close()
@@ -102,7 +116,48 @@ def delete_service_record(record_id):
     cursor.execute(
         """
         DELETE FROM ServiceRecord WHERE id = ?  
-        """
+        """,
+        (record_id),
     )
     conn.commit()
     conn.close()
+
+def add_line_item(service_record_id, service_type, product_used=None, quantity=1, cost=None, notes=None) -> int:
+    """
+    Adds the details to a service record.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        INSERT INTO ServiceLineItem (serviceRecordId, serviceType, productUsed, quantity, cost, notes)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (service_record_id, service_type, product_used, quantity, cost, notes),
+    )
+
+    serviceID = cursor.lastrowid
+    conn.commit()
+    conn.close()
+    return serviceID
+
+def get_line_item(service_record_id):
+    """
+    Retrieves the line items in a service record. 
+    """
+
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        SELECT * FROM ServiceLineItem
+        WHERE serviceRecordId = ?
+        ORDER BY id ASC
+        """,
+        (service_record_id),
+    )
+
+    lineItems = cursor.fetchall()
+    conn.close()
+
+    return lineItems
