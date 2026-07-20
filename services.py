@@ -29,7 +29,7 @@ def add_service_record(
     return serviceID
 
 
-def get_service_record(record_id) -> Optional[tuple]:
+def get_service_record(record_id:int) -> Optional[tuple]:
     """
     pulls the service record of a given vehicle
     """
@@ -47,7 +47,7 @@ def get_service_record(record_id) -> Optional[tuple]:
 
     return serviceRecord
 
-def list_services_for_vehicle(vehicle_id) -> list[tuple]:
+def list_services_for_vehicle(vehicle_id: int) -> list[tuple]:
     """
     fetches all services for a vehicle, newest first. WHERE vehicleId gets just the given records for a vehicle
     """
@@ -67,7 +67,7 @@ def list_services_for_vehicle(vehicle_id) -> list[tuple]:
 
     return services
 
-def delete_service_record(record_id) -> None:
+def delete_service_record(record_id: int) -> None:
     """
     Given record_id, service record is deleted. CASCADE takes care of service line items
     """
@@ -109,7 +109,7 @@ def add_line_item(
     conn.close()
     return serviceID
 
-def get_line_items(service_record_id) -> list[tuple]:
+def get_line_items(service_record_id: int) -> list[tuple]:
     """
     Retrieves the line items in a service record. 
     """
