@@ -29,7 +29,7 @@ def add_service_record(
     return serviceID
 
 
-def get_service_record(record_id:int) -> Optional[tuple]:
+def get_service_record(record_id: int) -> Optional[tuple]:
     """
     pulls the service record of a given vehicle
     """
@@ -183,7 +183,7 @@ def log_service_with_items(
         conn.commit()  #ONLY commits if everything above succeeded
         return new_service_id
 
-    except sqlite3.Error:
+    except Exception:
         conn.rollback()  #undo everything if anything fails
         raise
     finally:
