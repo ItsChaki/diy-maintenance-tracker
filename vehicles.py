@@ -28,7 +28,6 @@ def add_vehicle(vin: str, year: int, make: str, model: str,
     return new_id
 
 
-
 def get_vehicle(vehicle_id: int) -> Optional[tuple]:
     """
     Given vehicle_id, returns a tuple of row's values. None if not found

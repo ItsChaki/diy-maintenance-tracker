@@ -1,4 +1,3 @@
-import sqlite3
 from typing import Optional
 from database import get_connection
 
