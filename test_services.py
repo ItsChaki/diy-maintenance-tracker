@@ -1,4 +1,5 @@
 import pytest
+import sqlite3
 import database
 from vehicles import add_vehicle, delete_vehicle
 from services import (
@@ -9,8 +10,26 @@ from services import (
 
 @pytest.fixture
 def test_db(tmp_path):
-    # ... identical to test_vehicles.py ...
-    ...
+    """
+    Sets up a fresh temporary database for each test.
+    """
+    db_path = tmp_path / "test_garage.db"
+
+    #Apply schema to the temp database
+    conn = sqlite3.connect(str(db_path))
+    with open("schema.sql") as f:
+        conn.executescript(f.read())
+    conn.close()
+
+    #Point the database module at our temp file for this test
+    original_path = database.DB_PATH
+    database.DB_PATH = str(db_path)
+
+    yield  #the test runs here
+
+    #Restore the original path after the test
+    database.DB_PATH = original_path
+
 
 @pytest.fixture
 def vehicle_id(test_db):
@@ -33,7 +52,7 @@ def test_add_service_record(vehicle_id):
     assert record[1] == vehicle_id   # vehicleId column
     assert record[3] == 50000        # mileage
 
-    
+
 def test_log_service_with_items_rolls_back(vehicle_id):
     """A malformed item aborts the whole transaction — no orphan header survives."""
     bad_items = [
