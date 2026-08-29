@@ -52,6 +52,12 @@ def test_add_service_record(vehicle_id):
     assert record[1] == vehicle_id   # vehicleId column
     assert record[3] == 50000        # mileage
 
+def test_get_service_record_not_found():
+    """
+    testing to see we get a result of None
+    """
+    result = get_service_record(999)
+    assert result is None
 
 def test_log_service_with_items_rolls_back(vehicle_id):
     """A malformed item aborts the whole transaction — no orphan header survives."""
