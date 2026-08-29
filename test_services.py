@@ -52,12 +52,36 @@ def test_add_service_record(vehicle_id):
     assert record[1] == vehicle_id   # vehicleId column
     assert record[3] == 50000        # mileage
 
-def test_get_service_record_not_found():
+def test_get_service_record_not_found(test_db):
     """
     testing to see we get a result of None
     """
     result = get_service_record(999)
     assert result is None
+
+def test_list_services_for_vehicle(test_db):
+    """
+    Adds a vehicle to the database, then adds services to the vehicle.
+    Test that services are added. 
+    """
+    #1 vehicle added to the data base
+    testId = add_vehicle(
+            vin="1HGBH41JXMN109186",
+            year=2020,
+            make="Toyota",
+            model="Corolla",
+            nickname="Girlfriend's Car",
+        )
+    
+    #adds services to Girlfriend's car
+    add_service_record(testId,"2026-8-24", 120000, True, total_cost=69.99, Notes="R&P Oil Change")
+    add_service_record(testId,"2026-8-27", 120500, True, total_cost=100, Notes="Spark Plugs")
+    add_service_record(testId,"2026-8-29", 140000, True, total_cost=599.99, Notes="Brake Service")
+
+    #list vehicles
+    serviceList = list_services_for_vehicle(testId)
+    assert len(serviceList) == 3
+
 
 def test_log_service_with_items_rolls_back(vehicle_id):
     """A malformed item aborts the whole transaction — no orphan header survives."""
