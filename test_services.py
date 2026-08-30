@@ -30,7 +30,6 @@ def test_db(tmp_path):
     #Restore the original path after the test
     database.DB_PATH = original_path
 
-
 @pytest.fixture
 def vehicle_id(test_db):
     """A vehicle already in the temp db, so service tests have a valid FK target."""
@@ -65,13 +64,7 @@ def test_list_services_for_vehicle(test_db):
     Test that services are added. 
     """
     #1 vehicle added to the data base
-    testId = add_vehicle(
-            vin="1HGBH41JXMN109186",
-            year=2020,
-            make="Toyota",
-            model="Corolla",
-            nickname="Girlfriend's Car",
-        )
+    testId = vehicle_id(test_db)
     
     #adds services to Girlfriend's car
     add_service_record(testId,"2026-8-24", 120000, True, total_cost=69.99, Notes="R&P Oil Change")
@@ -82,7 +75,29 @@ def test_list_services_for_vehicle(test_db):
     serviceList = list_services_for_vehicle(testId)
     assert len(serviceList) == 3
 
+def test_delete_service_record(test_db):
+    """
+    Adds vehicle to the database, then adds services to the vehicle. Removes a service
+    and verifies service record was deleted.
+    """
+    #1 vehicle added to the data base
+    testId = vehicle_id()
 
+    #adds a service to Girlfriend's car
+    add_service_record(testId,"2026-8-24", 120000, True, total_cost=69.99, Notes="R&P Oil Change")
+
+    #remove a service, in this case the OC
+    delete_service_record(testId)
+
+    #there should now be no services
+    testServiceRecord = get_service_record(testId)
+    assert testServiceRecord == None
+
+def test_add_line_item(test_db):
+    """
+    """
+
+    
 def test_log_service_with_items_rolls_back(vehicle_id):
     """A malformed item aborts the whole transaction — no orphan header survives."""
     bad_items = [
