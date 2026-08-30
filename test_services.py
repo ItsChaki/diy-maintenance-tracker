@@ -84,10 +84,10 @@ def test_delete_service_record(test_db):
     testId = vehicle_id()
 
     #adds a service to Girlfriend's car
-    add_service_record(testId,"2026-8-24", 120000, True, total_cost=69.99, Notes="R&P Oil Change")
+    serviceID = add_service_record(testId,"2026-8-24", 120000, True, total_cost=69.99, Notes="R&P Oil Change")
 
     #remove a service, in this case the OC
-    delete_service_record(testId)
+    delete_service_record(serviceID)
 
     #there should now be no services
     testServiceRecord = get_service_record(testId)
@@ -95,9 +95,24 @@ def test_delete_service_record(test_db):
 
 def test_add_line_item(test_db):
     """
+    First needs to add service record, then adds line items. 
+    After line item is added, needs to check successfully added
     """
+    #get vehicle ID
+    testId = vehicle_id(test_db)
 
-    
+    #add service record
+    serviceID = add_service_record(testId,"2026-8-24", 120000, True, total_cost=69.99, Notes="R&P Oil Change")
+
+    #add line items
+    add_line_item(serviceID, service_type="Oil Change", 
+                  product_used=["Valvoline Restore & Protect", "Valvoline Oil filter", "New Crushed washer"],
+                  quantity=1, cost=["29.99", "5.99", "0.99"])
+
+    #now retrieve line items from service record
+    lineItems = get_line_items(serviceID)
+    assert len(lineItems) == 1
+
 def test_log_service_with_items_rolls_back(vehicle_id):
     """A malformed item aborts the whole transaction — no orphan header survives."""
     bad_items = [
