@@ -113,6 +113,14 @@ def test_add_line_item(test_db):
     lineItems = get_line_items(serviceID)
     assert len(lineItems) == 1
 
+def test_get_line_items(test_db):
+    """
+    """
+
+def test_cascade(test_db):
+    """
+
+    """
 def test_log_service_with_items_rolls_back(vehicle_id):
     """A malformed item aborts the whole transaction — no orphan header survives."""
     bad_items = [
